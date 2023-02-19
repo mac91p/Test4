@@ -14,7 +14,7 @@ public class PersonRunner {
         peopleList.add(new Person("Janina", "Buczek", "Warszawa", 30));
         peopleList.add(new Person("Marian", "Lasek", "Kraków", 18));
         peopleList.add(new Person("Marcin", "Puczyk", "Poznań", 31));
-        peopleList.add(new Person("Agnieszka", "Waligóra", "Wrocław", 27));
+        peopleList.add(new Person("Agnieszka", "Waligóra", "Kraków", 27));
 
         PersonService personService = new PersonService();
         System.out.println(personService.getOldestWoman(peopleList));
