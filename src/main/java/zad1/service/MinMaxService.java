@@ -2,7 +2,7 @@ package zad1.service;
 
 import zad1.model.MinMax;
 
-import java.util.List;
+import java.util.*;
 
 public class MinMaxService<T> {
 
@@ -12,32 +12,21 @@ public class MinMaxService<T> {
     }
 
     private static <T extends Comparable<T>> T getMin(List<T> elements) {
-        T min = null;
-        for (T element : elements) {
-            if (min == null) {
-                min = element;
-                continue;
-            }
-            if (element.compareTo(min) < 0) {
-                min = element;
-            }
-        }
-        return min;
+        return Optional.ofNullable(elements)
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .filter(Objects::nonNull)
+                .min(Comparator.naturalOrder())
+                .orElse(null);
     }
 
-
     private static <T extends Comparable<T>> T getMax(List<T> elements) {
-        T max = null;
-        for (T element : elements) {
-            if (max == null) {
-                max = element;
-                continue;
-            }
-            if (element.compareTo(max) > 0) {
-                max = element;
-            }
-        }
-        return max;
+        return Optional.ofNullable(elements)
+                .orElseGet(Collections::emptyList)
+                .stream()
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(null);
     }
 
 

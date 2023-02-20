@@ -4,7 +4,7 @@ import zad4.exception.NoWomenException;
 import zad4.exception.WrongSexException;
 import zad4.model.Person;
 import java.util.*;
-import java.util.function.Predicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class PersonService {
@@ -29,8 +29,8 @@ public class PersonService {
                 .orElseThrow();
     }
 
-    public int getMensAverageAge(List<Person> personList) {
-        return (int) Optional.ofNullable(personList)
+    public int getMensAverageAge(List<Person> peopleList) {
+        return (int) Optional.ofNullable(peopleList)
                 .orElseGet(Collections::emptyList)
                 .stream()
                 .filter(Objects::nonNull)
@@ -52,24 +52,15 @@ public class PersonService {
     }
 
     public int getSexAverageAge(List<Person> personList, String sex) {
-        Predicate<Person> sexPredicate;
-        if (sex.equalsIgnoreCase("woman")) {
-            sexPredicate = x -> x.getFirstName().endsWith("a");
-        } else if (sex.equalsIgnoreCase("men")) {
-            sexPredicate = x -> !x.getFirstName().endsWith("a");
-        } else {
-            throw new WrongSexException("Given sex is not correct");
-        }
-        return (int) Optional.ofNullable(personList)
-                .orElseGet(Collections::emptyList)
-                .stream()
-                .filter(Objects::nonNull)
-                .filter(sexPredicate)
-                .mapToInt(Person::getAge)
-                .average()
-                .orElseThrow();
+        Map<String, Function<List<Person>, Integer>> sexFunctions = new HashMap<>();
+        sexFunctions.put("man", this::getMensAverageAge);
+        sexFunctions.put("woman", this::getWomenAverageAge);
+        return sexFunctions.getOrDefault(sex.toLowerCase(), x -> {
+                    throw new WrongSexException("Wrong provided sex");
+                })
+                .apply(personList);
     }
-    //wybrałem listę miast, żeby w przypadku gdy będzie kilka miast z taką samą, najwyższą liczbą ludzi, były zwrócone wszystkie
+
     public List<String> getCitiesWithHighestPopulation(List<Person> personList) {
         Map<String, Long> citiesMap = Optional.ofNullable(personList)
                 .orElseGet(Collections::emptyList)

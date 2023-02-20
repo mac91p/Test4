@@ -8,7 +8,7 @@ public class OptionalRunner {
 
         Scanner sc = new Scanner(System.in);
         OptionalService optionalService = new OptionalService();
-        optionalService.getNameLength(sc);
-        optionalService.getBirthDateOutOfPesel(sc);
+        System.out.println(optionalService.getNameLength(sc));
+        System.out.println(optionalService.getBirthDateOutOfPesel(sc));
     }
 }
