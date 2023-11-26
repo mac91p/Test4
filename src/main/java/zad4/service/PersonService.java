@@ -3,6 +3,7 @@ package zad4.service;
 import zad4.exception.NoWomenException;
 import zad4.exception.WrongSexException;
 import zad4.model.Person;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -55,11 +56,11 @@ public class PersonService {
         Map<String, Function<List<Person>, Integer>> sexFunctions = new HashMap<>();
         sexFunctions.put("man", this::getMensAverageAge);
         sexFunctions.put("woman", this::getWomenAverageAge);
-        return sexFunctions.getOrDefault(sex.toLowerCase(), x -> {
-                    throw new WrongSexException("Wrong provided sex");
-                })
+        return Optional.ofNullable(sexFunctions.get(sex == null ? "" : sex.toLowerCase()))
+                .orElseThrow(() -> new WrongSexException("Wrong or null provided sex"))
                 .apply(personList);
     }
+
 
     public List<String> getCitiesWithHighestPopulation(List<Person> personList) {
         Map<String, Long> citiesMap = Optional.ofNullable(personList)
@@ -85,7 +86,6 @@ public class PersonService {
                 .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
-
     }
 
 }
